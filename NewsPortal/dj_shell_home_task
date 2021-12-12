@@ -1,0 +1,68 @@
+from main.models import *
+
+
+user1 = User.objects.create_user(username = 'user1')
+user2 = User.objects.create_user(username = 'user2')
+
+
+author1 = Author.objects.create(author = user1)
+author2 = Author.objects.create(author = user2)
+
+
+cat1 = Category.objects.create(category_name = 'Политика')
+cat2 = Category.objects.create(category_name = 'Спорт')
+cat3 = Category.objects.create(category_name = 'Кухня')
+cat4 = Category.objects.create(category_name = 'Здоровье')
+
+
+post1 = Post.objects.create(author = author1, type_content = Post.article, title = 'статья1', text = 'Текст поста1')
+post2 = Post.objects.create(author = author1, type_content = Post.article, title = 'статья2', text = 'Текст поста2')
+post3 = Post.objects.create(author = author2, type_content = Post.news, title = 'новость1', text = 'Текст поста3')
+
+
+post_cat1 = PostCategory.objects.create(post = post1, category = cat1)
+post_cat2 = PostCategory.objects.create(post = post1, category = cat2)
+post_cat3 = PostCategory.objects.create(post = post2, category = cat3)
+post_cat4 = PostCategory.objects.create(post = post3, category = cat4)
+
+
+com1 = Comment.objects.create(post = post1, user = user1, comment = "комментарий1 к посту 1")
+com2 = Comment.objects.create(post = post1, user = user1, comment = "комментарий2 к посту 1")
+com3 = Comment.objects.create(post = post2, user = user2, comment = "комментарий к посту 2")
+com4 = Comment.objects.create(post = post3, user = user2, comment = "комментарий к посту 3")
+
+
+com1.like()
+com1.like()
+com1.like()
+com4.dislike()
+com4.dislike()
+com3.like()
+post1.like()
+post2.like()
+post2.like()
+post3.dislike()
+
+
+author1.update_rating()
+author2.update_rating()
+
+
+very_author = Author.objects.all().order_by('-rating_author').values().first()
+rating_very_author = very_author['rating_author']
+username_very_author = User.objects.filter(id = very_author['author_id']).values()[0]['username']
+ 
+ 
+very_post = Post.objects.all().order_by('-rating_content').first()
+author_very_post = Author.objects.filter(post = very_post)
+username_very_post = User.objects.filter(id = author_very_post.values()[0]['author_id']).values()[0]['username']
+date_very_post = very_post.date_create_post.date().strftime("%Y-%m-%d")
+rating_very_post = very_post.rating_content
+title_very_post = very_post.title
+preview = very_post.preview()
+
+
+comments_very_post = [(x.date_create_comment.strftime("%Y-%m-%d"), x.user.username, x.rating_comment, x.comment ) for x in very_post.comment_set.all()]
+
+
+
