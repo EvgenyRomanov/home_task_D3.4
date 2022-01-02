@@ -1,0 +1,20 @@
+{% extends 'default.html' %} 
+ 
+{% load sensor %}
+
+{% block title %}
+News
+{% endblock title %}
+ 
+
+{% block content %}
+<h1>Все новости</h1>
+<p>Количество новостей: {{ news|length }}</p>
+<p>---------------------------</p>
+{% for n in news%}
+<p>{{ n.title|Sensor }}</p>
+<p>{{ n.date_create_post|date:'d.M.Y' }}</p>
+<p>{{ n.text|truncatechars:50|Sensor }}</p>
+<p>---------------------------</p>
+{% endfor %}
+{% endblock content %}

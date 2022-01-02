@@ -1,0 +1,17 @@
+
+{% extends 'default.html' %} 
+
+{% load sensor %}
+
+
+{% block title %}
+News
+{% endblock title %}
+ 
+
+{% block content %}
+<h3>{{ news_detail.title|Sensor }}</h3>
+<p>{{ news_detail.date_create_post|date:'d-M-Y G:i' }}</p>
+<p>{{ news_detail.text|Sensor }}</p>
+{% endblock content %}
+
